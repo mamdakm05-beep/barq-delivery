@@ -1,0 +1,10 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>برق للتوصيل</title><link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="brand"><img src="/assets/barq-logo.png"><span>برق <small>للتوصيل السريع</small></span></div><button class="ghost" onclick="admin()">لوحة الإدارة</button></header>
+<main>
+<section id="join" class="card hero"><div class="heroText"><span class="tag">⚡ أسرع طريق لطلبك</span><h1>برق<br><em>للتوصيل السريع</em></h1><p>من موقعك إلى بابك بسرعة البرق. سجّل بياناتك وحدد عنوانك داخل ليبيا، والباقي علينا.</p><div class="features"><span>⚡ توصيل سريع</span><span>📍 موقع دقيق</span><span>🛡️ تعامل آمن</span></div></div><div class="form"><h2>ابدأ الآن</h2><input id="name" placeholder="الاسم"><input id="phone" placeholder="+218 9X XXX XXXX"><button onclick="next()">حدد موقعك واطلب بسرعة ⚡</button></div></section>
+<section id="loc" class="card hide"><h2>📍 أين نوصّل طلبك؟</h2><p>اختر موقعك بدقة على الخريطة — كل ثانية تفرق مع برق.</p><div id="map"></div><div id="address">اضغط على موقعك في الخريطة</div><button id="save" disabled onclick="save()">تأكيد الموقع وإنشاء كود التوصيل</button></section>
+<section id="done" class="card hide"><h2>⚡ جاهز للانطلاق!</h2><p>احتفظ بكود التوصيل الخاص بك.</p><strong id="code"></strong><p id="info"></p></section>
+<section id="panel" class="card hide"><div class="panelHead"><div><h2>لوحة إدارة برق</h2><p>العملاء، أكواد التوصيل، الأرقام والعناوين.</p></div><input id="search" placeholder="بحث بالاسم أو الرقم أو الكود" oninput="load()"></div><div id="customers"></div></section>
+</main>
+<div id="modal" class="modal hide"><div class="login"><img src="/assets/barq-logo.png"><h3>دخول الإدارة</h3><input id="ap" placeholder="+86 15524003705"><input id="pw" type="password" placeholder="كلمة المرور"><button onclick="login()">دخول</button><button class="ghost" onclick="$('modal').classList.add('hide')">إغلاق</button><p id="err"></p></div></div>
+<script src="/app.js"></script></body></html>
