@@ -1,6 +1,6 @@
 let map,marker,geo,sel,key="";const $=x=>document.getElementById(x);fetch("/api/config").then(r=>r.json()).then(x=>key=x.googleMapsApiKey);
 function show(x){["join","loc","done","panel"].forEach(i=>$(i).classList.add("hide"));$(x).classList.remove("hide")}
-function next(){if(!$("name").value.trim()||!$("phone").value.trim())return alert("أدخل الاسم ورقم الهاتف");show("loc");if(!key){$("map").innerHTML="<p style='padding:25px'>أضف GOOGLE_MAPS_API_KEY في Railway لتشغيل الخريطة.</p>";return}let s=document.createElement("script");s.src=`https://maps.googleapis.com/maps/api/js?key=${key}&callback=init`;s.async=true;window.init=init;document.head.appendChild(s)}
+function next(){if(!$("name").value.trim()||!$("phone").value.trim())return alert("أدخل الاسم ورقم الهاتف");show("loc");setTimeout(()=>{if(map)map.invalidateSize()},200)}
 function init(){map=L.map("map").setView([27,17],5);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);map.on("click",function(e){sel={lat:e.latlng.lat,lng:e.latlng.lng};if(marker)marker.setLatLng(e.latlng);else marker=L.marker(e.latlng).addTo(map)})}
 async function save(){let r=await fetch("/api/customers",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("name").value,phone:$("phone").value,...sel})}),d=await r.json();if(!r.ok)return alert(d.error);$("code").textContent=d.code;$("info").textContent=`${d.name} — ${d.phone} — ${d.address}`;show("done")}
 function admin(){$("modal").classList.remove("hide")}
