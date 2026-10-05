@@ -2,6 +2,7 @@ require("dotenv").config();
 const express=require("express"),path=require("path"),crypto=require("crypto");
 const Database=require("better-sqlite3"),helmet=require("helmet"),rateLimit=require("express-rate-limit"),cookieParser=require("cookie-parser");
 const app=express(),PORT=process.env.PORT||3000,db=new Database(process.env.DB_PATH||path.join(__dirname,"barq.db"));
+app.set('trust proxy', 1);
 db.pragma("journal_mode=WAL");
 db.exec(`CREATE TABLE IF NOT EXISTS customers(id TEXT PRIMARY KEY,name TEXT NOT NULL,phone TEXT NOT NULL,code TEXT UNIQUE NOT NULL,address TEXT,lat REAL,lng REAL,created_at TEXT NOT NULL,updated_at TEXT NOT NULL);`);
 app.use(helmet({contentSecurityPolicy:false}));app.use(express.json());app.use(cookieParser());app.use(rateLimit({windowMs:15*60*1000,max:300}));app.use(express.static("public"));
