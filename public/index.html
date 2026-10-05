@@ -1,11 +1,478 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>برق للتوصيل</title><link rel="stylesheet" href="/style.css"></head><body>
-<header><div class="brand"><img src="/assets/barq-logo.png"><span>برق <small>للتوصيل السريع</small></span></div><button class="ghost" onclick="admin()">لوحة الإدارة</button></header>
-<main>
-<section id="join" class="card hero"><div class="heroText"><span class="tag">⚡ أسرع طريق لطلبك</span><h1>برق<br><em>للتوصيل السريع</em></h1><p>من موقعك إلى بابك بسرعة البرق. سجّل بياناتك وحدد عنوانك داخل ليبيا، والباقي علينا.</p><div class="features"><span>⚡ توصيل سريع</span><span>📍 موقع دقيق</span><span>🛡️ تعامل آمن</span></div></div><div class="form"><h2>ابدأ الآن</h2><input id="name" placeholder="الاسم"><input id="phone" placeholder="+218 9X XXX XXXX"><button onclick="next()">حدد موقعك واطلب بسرعة ⚡</button></div></section>
-<section id="loc" class="card hide"><h2>📍 أين نوصّل طلبك؟</h2><p>اختر موقعك بدقة على الخريطة — كل ثانية تفرق مع برق.</p><div id="map"></div><div id="address">اضغط على موقعك في الخريطة</div><button id="save" disabled onclick="save()">تأكيد الموقع وإنشاء كود التوصيل</button></section>
-<section id="done" class="card hide"><h2>⚡ جاهز للانطلاق!</h2><p>احتفظ بكود التوصيل الخاص بك.</p><strong id="code"></strong><p id="info"></p></section>
-<section id="panel" class="card hide"><div class="panelHead"><div><h2>لوحة إدارة برق</h2><p>العملاء، أكواد التوصيل، الأرقام والعناوين.</p></div><input id="search" placeholder="بحث بالاسم أو الرقم أو الكود" oninput="load()"></div><div id="customers"></div></section>
-</main>
-<div id="modal" class="modal hide"><div class="login"><img src="/assets/barq-logo.png"><h3>دخول الإدارة</h3><input id="ap" placeholder="+86 15524003705"><input id="pw" type="password" placeholder="كلمة المرور"><button onclick="login()">دخول</button><button class="ghost" onclick="$('modal').classList.add('hide')">إغلاق</button><p id="err"></p></div></div>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>script src="/app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b12">
+  <title>برق للتوصيل</title>
+  <link rel="stylesheet" href="/style.css?v=20">
+</head>
+
+<body>
+
+  <!-- ===================== -->
+  <!-- صفحة الترحيب -->
+  <!-- ===================== -->
+  <main id="welcomePage" class="page active">
+    <section class="hero">
+      <div class="brand">
+        <div class="logo-wrap">
+          < img src="/assets/barq-logo.png" class="main-logo" alt="برق">
+        </div>
+
+        <p class="eyebrow">BARQ DELIVERY</p >
+        <h1>برق للتوصيل</h1>
+        <p class="hero-text">
+          توصيل أسرع، متابعة أوضح، وكل طلب في مكانه.
+        </p >
+      </div>
+
+      <div class="camry-card">
+        < img src="/assets/barq-camry.png" alt="برق للتوصيل" class="camry-img">
+        <div class="speed-line">⚡ برق أسرع من الكامري ⚡</div>
+      </div>
+
+      <button class="primary big" onclick="openRoles()">
+        ابدأ الآن
+      </button>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- اختيار نوع الحساب -->
+  <!-- ===================== -->
+  <main id="rolesPage" class="page">
+    <section class="container">
+
+      <button class="back" onclick="showPage('welcomePage')">→ رجوع</button>
+
+      <div class="section-title">
+        <span>⚡</span>
+        <h2>من أنت؟</h2>
+        <p>اختر نوع حسابك للدخول إلى برق</p >
+      </div>
+
+      <div class="role-grid">
+
+        <button class="role-card customer" onclick="chooseRole('customer')">
+          <div class="role-icon">👤</div>
+          <div>
+            <strong>عميل</strong>
+            <small>تابع طلبياتك وفواتيرك</small>
+          </div>
+        </button>
+
+        <button class="role-card store" onclick="chooseRole('store')">
+          <div class="role-icon">🏪</div>
+          <div>
+            <strong>متجر</strong>
+            <small>أرسل الطرود وتابعها</small>
+          </div>
+        </button>
+
+        <button class="role-card driver" onclick="chooseRole('driver')">
+          <div class="role-icon">🚗</div>
+          <div>
+            <strong>سائق</strong>
+            <small>استلم طلبيات التوصيل</small>
+          </div>
+        </button>
+
+        <button class="role-card admin" onclick="chooseRole('admin')">
+          <div class="role-icon">🛡️</div>
+          <div>
+            <strong>إداري</strong>
+            <small>إدارة الطلبات والتوزيع</small>
+          </div>
+        </button>
+
+        <button class="role-card manager" onclick="chooseRole('manager')">
+          <div class="role-icon">👑</div>
+          <div>
+            <strong>المدير</strong>
+            <small>الإدارة الكاملة لنظام برق</small>
+          </div>
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- العميل -->
+  <!-- ===================== -->
+  <main id="customerAuth" class="page">
+    <section class="auth-box">
+      <button class="back" onclick="showPage('rolesPage')">→ رجوع</button>
+
+      <div class="auth-icon">👤</div>
+      <h2>بوابة العميل</h2>
+      <p>سجّل لأول مرة أو ادخل لمتابعة طلبياتك</p >
+
+      <div class="tabs">
+        <button id="customerRegisterTab" class="tab active"
+                onclick="customerMode('register')">
+          تسجيل جديد
+        </button>
+
+        <button id="customerLoginTab" class="tab"
+                onclick="customerMode('login')">
+          دخول
+        </button>
+      </div>
+
+      <form id="customerRegisterForm" onsubmit="registerCustomer(event)">
+        <label>الاسم</label>
+        <input id="customerName" required placeholder="اكتب اسمك">
+
+        <label>رقم الهاتف</label>
+        <input id="customerPhone" type="tel" required placeholder="رقم الهاتف">
+
+        <button class="primary" type="submit">إنشاء حساب</button>
+      </form>
+
+      <form id="customerLoginForm" class="hidden" onsubmit="loginCustomer(event)">
+        <label>رقم الهاتف</label>
+        <input id="customerLoginPhone" type="tel" required placeholder="رقم الهاتف">
+
+        <label>كود العميل</label>
+        <input id="customerCode" inputmode="numeric" maxlength="4"
+               required placeholder="0000">
+
+        <button class="primary" type="submit">دخول</button>
+      </form>
+
+      <div id="customerNewCode" class="code-result hidden"></div>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- المتجر -->
+  <!-- ===================== -->
+  <main id="storeAuth" class="page">
+    <section class="auth-box">
+      <button class="back" onclick="showPage('rolesPage')">→ رجوع</button>
+
+      <div class="auth-icon">🏪</div>
+      <h2>بوابة المتجر</h2>
+      <p>المتاجر الجديدة تحتاج موافقة الإدارة</p >
+
+      <div class="tabs">
+        <button id="storeRegisterTab" class="tab active"
+                onclick="storeMode('register')">
+          تسجيل متجر
+        </button>
+
+        <button id="storeLoginTab" class="tab"
+                onclick="storeMode('login')">
+          دخول
+        </button>
+      </div>
+
+      <form id="storeRegisterForm" onsubmit="registerStore(event)">
+        <label>اسم المتجر</label>
+        <input id="storeName" required placeholder="اسم المتجر">
+
+        <label>رقم الهاتف</label>
+        <input id="storePhone" type="tel" required placeholder="رقم الهاتف">
+
+        <button class="primary" type="submit">إرسال طلب التسجيل</button>
+      </form>
+
+      <form id="storeLoginForm" class="hidden" onsubmit="loginSimple(event,'store')">
+        <label>رقم الهاتف</label>
+        <input id="storeLoginPhone" type="tel" required placeholder="رقم الهاتف">
+
+        <button class="primary" type="submit">دخول المتجر</button>
+      </form>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- السائق -->
+  <!-- ===================== -->
+  <main id="driverAuth" class="page">
+    <section class="auth-box">
+      <button class="back" onclick="showPage('rolesPage')">→ رجوع</button>
+
+      <div class="auth-icon">🚗</div>
+      <h2>بوابة السائق</h2>
+      <p>يتم تفعيل حساب السائق بعد مراجعة الإدارة</p >
+
+      <div class="tabs">
+        <button id="driverRegisterTab" class="tab active"
+                onclick="driverMode('register')">
+          تسجيل سائق
+        </button>
+
+        <button id="driverLoginTab" class="tab"
+                onclick="driverMode('login')">
+          دخول
+        </button>
+      </div>
+
+      <form id="driverRegisterForm"
+            enctype="multipart/form-data"
+            onsubmit="registerDriver(event)">
+
+        <label>اسم السائق</label>
+        <input id="driverName" required placeholder="الاسم الكامل">
+
+        <label>رقم الهاتف</label>
+        <input id="driverPhone" type="tel" required placeholder="رقم الهاتف">
+
+        <label>صورة رخصة القيادة</label>
+        <label class="upload-box">
+          <span>📷 اضغط لاختيار صورة الرخصة</span>
+          <input id="driverLicense"
+                 type="file"
+                 accept="image/*"
+                 required
+                 hidden>
+        </label>
+
+        <button class="primary" type="submit">إرسال طلب التسجيل</button>
+      </form>
+
+      <form id="driverLoginForm" class="hidden"
+            onsubmit="loginSimple(event,'driver')">
+
+        <label>رقم الهاتف</label>
+        <input id="driverLoginPhone" type="tel" required placeholder="رقم الهاتف">
+
+        <button class="primary" type="submit">دخول السائق</button>
+      </form>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- الإداري -->
+  <!-- ===================== -->
+  <main id="adminAuth" class="page">
+    <section class="auth-box compact">
+      <button class="back" onclick="showPage('rolesPage')">→ رجوع</button>
+
+      <div class="auth-icon">🛡️</div>
+      <h2>دخول الإداري</h2>
+      <p>بوابة خاصة بفريق إدارة برق</p >
+
+      <form onsubmit="loginStaff(event,'admin')">
+        <label>اسم المستخدم</label>
+        <input id="adminUsername"
+               value="MOH"
+               autocomplete="username"
+               required>
+
+        <label>كلمة المرور</label>
+        <input id="adminPassword"
+               type="password"
+               autocomplete="current-password"
+               required
+               placeholder="••••••••">
+
+        <button class="primary" type="submit">دخول الإدارة</button>
+      </form>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- المدير -->
+  <!-- ===================== -->
+  <main id="managerAuth" class="page">
+    <section class="auth-box compact manager-login">
+      <button class="back" onclick="showPage('rolesPage')">→ رجوع</button>
+
+      <div class="auth-icon">👑</div>
+      <h2>دخول المدير</h2>
+      <p>الصلاحيات العليا لنظام برق</p >
+
+      <form onsubmit="loginStaff(event,'manager')">
+        <label>اسم المستخدم</label>
+        <input id="managerUsername"
+               autocomplete="username"
+               required
+               placeholder="اسم المستخدم">
+
+        <label>كلمة المرور</label>
+        <input id="managerPassword"
+               type="password"
+               autocomplete="current-password"
+               required
+               placeholder="••••••••">
+
+        <button class="primary" type="submit">دخول المدير</button>
+      </form>
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- لوحة الاستخدام -->
+  <!-- ===================== -->
+  <main id="dashboardPage" class="page">
+
+    <header class="topbar">
+      <div class="mini-brand">
+        <span class="bolt">⚡</span>
+        <div>
+          <strong>برق</strong>
+          <small id="roleTitle">لوحة التحكم</small>
+        </div>
+      </div>
+
+      <button class="logout" onclick="logout()">خروج</button>
+    </header>
+
+    <section class="dashboard">
+
+      <div class="welcome-card">
+        <div>
+          <small>مرحباً بك في برق</small>
+          <h2 id="welcomeName">—</h2>
+        </div>
+
+        <div id="customerCodeBadge" class="customer-code hidden">
+          <small>كود العميل</small>
+          <strong id="myCustomerCode">0000</strong>
+        </div>
+      </div>
+
+      <!-- إحصائيات -->
+      <div id="stats" class="stats-grid"></div>
+
+      <!-- المتجر: إضافة طلب -->
+      <section id="storeOrderBox" class="panel hidden">
+        <div class="panel-head">
+          <div>
+            <h3>⚡ إرسال طرد جديد</h3>
+            <p>أدخل كود الطرد وكود العميل</p >
+          </div>
+        </div>
+
+        <form class="inline-form" onsubmit="createOrder(event)">
+          <input id="parcelCode" required placeholder="كود الطرد">
+          <input id="orderCustomerCode"
+                 maxlength="4"
+                 inputmode="numeric"
+                 required
+                 placeholder="كود العميل 0000">
+          <button class="primary" type="submit">إرسال للإدارة</button>
+        </form>
+      </section>
+
+      <!-- الموافقات -->
+      <section id="approvalsPanel" class="panel hidden">
+        <div class="panel-head">
+          <div>
+            <h3>طلبات التسجيل</h3>
+            <p>مراجعة المتاجر والسائقين الجدد</p >
+          </div>
+          <span id="pendingCount" class="counter">0</span>
+        </div>
+
+        <div id="pendingUsers" class="list"></div>
+      </section>
+
+      <!-- طلبات الإدارة -->
+      <section id="adminOrdersPanel" class="panel hidden">
+        <div class="panel-head">
+          <div>
+            <h3>الطلبيات الواردة</h3>
+            <p>توزيع الطلبيات على السائقين</p >
+          </div>
+        </div>
+
+        <div id="adminOrders" class="list"></div>
+      </section>
+
+      <!-- جميع الحسابات للمدير -->
+      <section id="managerUsersPanel" class="panel hidden">
+        <div class="panel-head">
+          <div>
+            <h3>جميع الحسابات</h3>
+            <p>المدير فقط يستطيع تعطيل الحسابات</p >
+          </div>
+        </div>
+
+        <input id="userSearch"
+               class="search"
+               placeholder="ابحث بالاسم أو الهاتف..."
+               oninput="filterManagerUsers()">
+
+        <div id="managerUsers" class="list"></div>
+      </section>
+
+      <!-- طلبيات المستخدم -->
+      <section id="myOrdersPanel" class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 id="ordersTitle">الطلبيات</h3>
+            <p id="ordersSubtitle">متابعة حالة الطلبات</p >
+          </div>
+        </div>
+
+        <div id="myOrders" class="orders-grid"></div>
+      </section>
+
+      <!-- الأرشيف -->
+      <section id="invoicesPanel" class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>📄 أرشيف فواتير التوصيل</h3>
+            <p>سجل الطلبيات التي تم تسليمها</p >
+          </div>
+        </div>
+
+        <div id="invoices" class="list"></div>
+      </section>
+
+    </section>
+  </main>
+
+
+  <!-- ===================== -->
+  <!-- نافذة توزيع الطلب -->
+  <!-- ===================== -->
+  <div id="assignModal" class="modal hidden">
+    <div class="modal-card">
+
+      <button class="modal-close" onclick="closeAssign()">×</button>
+
+      <h3>إرسال الطلب للسائق</h3>
+      <p id="assignParcel">—</p >
+
+      <label>اختر السائق</label>
+      <select id="assignDriver"></select>
+
+      <label>رسالة للسائق</label>
+      <textarea id="assignMessage"
+                rows="4"
+                placeholder="اكتب تعليمات أو ملاحظات للسائق..."></textarea>
+
+      <label>رابط</label>
+      <input id="assignLink"
+             type="url"
+             placeholder="https://...">
+
+      <button class="primary" onclick="confirmAssign()">
+        إرسال الطلب للسائق
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ===================== -->
+  <!-- رسائل النظام -->
+  <!-- ===================== -->
+  <div id="toast" class="toast hidden"></div>
+
+
+  <script src="/app.js?v=20"></script>
+</body>
+</html>
